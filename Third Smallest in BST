@@ -1,0 +1,109 @@
+#problem 4: finding third smallest in BST
+#I'm using inorder traversal since it returns elements
+#in an ascendingly sorted order
+
+# Class to represent Tree node
+class Node:
+    # A function to create a new node
+    def __init__(self, key):
+        self.data = key
+        self.left = None
+        self.right = None
+
+#time complexity: O(n)
+#space complexity: O(n)
+def thirdSmallest(root):
+ 
+    #necessary variables
+    stack = []
+    prev = None
+    counter = 0
+    third = None
+ 
+    #while the stack has values or if if the node is not None:
+    while len(stack) > 0 or root != None:
+ 
+        #if the current node is not None
+        if root != None:
+            #push it onto the stack and
+            #set the root variable to the left child
+            stack.append(root)
+            root = root.left
+
+        #if the current node is None    
+        else:
+            #pop an element from the stack and increment the counter
+            root = stack.pop()
+            counter += 1
+
+            #if prev is not None, check that the previous value
+            #is less than the popped element (to catch invalid BSTs)
+            if prev != None:
+                if prev.data > root.data:
+                    #if it is greater, then the BST is invalid
+                    return "Not a BST"
+            
+            #if the counter equals 3, store the element's number
+            #and keep running to finish traversal and ensure it is a BST
+            if counter == 3:
+                third = root
+            
+            #else, set prev to be the last processed node
+            #and set the root variable equal to the right child
+            prev = root
+            root = root.right
+    
+    #if third was updated, return the element
+    if third:
+        return third
+
+    else:
+        #if traversal is complete and the third variable was never
+        #updated, then the tree is too small
+        return "BST is too small"
+
+#given tree
+inp4 = Node(4)
+inp4.left = Node(2)
+inp4.right = Node(6)
+inp4.left.left = Node(1)
+inp4.left.right = Node(3)
+inp4.right.left = Node(5)
+inp4.right.right = Node(7)
+#what is returned is the Node element, so print the value itself
+print("output for given problem:", thirdSmallest(inp4).data)
+
+#test 1 & 2: tree is too small
+test1 = Node(5)
+print("test 1:", thirdSmallest(test1))
+
+test2 = Node(7)
+test2.left = Node(6)
+print("test 2:", thirdSmallest(test2))
+
+#test 3: unbalanced BST
+test3 = Node(10)
+test3.left = Node(9)
+test3.left.left = Node(8)
+test3.left.left.left = Node(7)
+test3.left.left.left.left = Node(6)
+print("test 3:", thirdSmallest(test3).data)
+
+#test 4 & 5: not a BST
+test4 = Node(4)
+test4.left = Node(3)
+test4.right = Node(6)
+test4.left.left = Node(1)
+test4.left.right = Node(2)
+test4.right.left = Node(5)
+test4.right.right = Node(7)
+print("test 4:", thirdSmallest(test4))
+
+test5 = Node(4)
+test5.left = Node(2)
+test5.right = Node(7)
+test5.left.left = Node(1)
+test5.left.right = Node(3)
+test5.right.left = Node(5)
+test5.right.right = Node(6)
+print("test 5:", thirdSmallest(test4))
