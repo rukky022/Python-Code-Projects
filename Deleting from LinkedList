@@ -1,0 +1,91 @@
+#problem 3: Linked List Deletion
+
+#creating the LinkedList and Node classes
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+    
+    #function to print the list
+    def printList(self):
+        current = self.head
+        while current:
+            print(current.data, ">", end=" ")
+            current = current.next
+        print(None)
+
+#time complexity: O(n)
+#space complexity: O(1)
+def deleteThirdLast(lList):
+
+    #necessary variables
+    #i is initialized to the start of the list
+    #j is first initialized to the node after the start of the list
+    i, j = lList.head, lList.head.next
+    temp = None
+
+    #catch a case where the list doesn't have at least three nodes
+    if j and j.next:
+
+        #update j to be two indices away from start of the list
+        j = j.next
+
+        #while j's linked node is not None
+        while j.next:
+            #shift all the values in the variables to the right by one node
+            temp = i
+            i = i.next
+            j = j.next
+        
+        #if the length of the linked list is exactly 3 (aka temp was never updated)
+        #then the third last node is the head of the list
+        #so make the head of the list the element after the current head
+        if temp == None:
+            lList.head = i.next
+        
+        #otherwise
+        else:
+            #once j is at the end of the list, variable i will hold the node 
+            #that needs to be deleted. So, connect the temp variable to
+            #the node after i which dislodges the node at i from the list
+            temp.next = i.next
+
+        #return the modified list
+        return lList.printList()
+    
+    else:
+        return "Linked List is too short"
+
+#making the given list
+inp3 = LinkedList()
+inp3.head = Node(2)
+second, third, fourth, fifth, sixth = Node(3), Node(1), Node(7), Node(5), Node(18)
+inp3.head.next, second.next, third.next, fourth.next, fifth.next = second, third, fourth, fifth, sixth
+
+#print given list
+print("given: ", end="")
+inp3.printList()
+print("output for given problem: ", end ="")
+deleteThirdLast(inp3)
+
+#test 1 & 2: lists that are too short
+test1 = LinkedList()
+test1.head = Node(4)
+print("test 1:", deleteThirdLast(test1))
+
+test2 = LinkedList()
+test2.head = Node(3)
+test2.head.next = Node(4)
+print("test 2:", deleteThirdLast(test2))
+
+#test 3: list with exactly 3 nodes
+test3 = LinkedList()
+test3.head = Node(3)
+test3.head.next = Node(4)
+test3.head.next.next = Node(5)
+print("test 3: ", end="")
+deleteThirdLast(test3)
