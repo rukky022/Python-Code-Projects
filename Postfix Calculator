@@ -1,0 +1,91 @@
+#problem 2: post fix calculator
+
+#helper method
+def calcHelper(stack, operator):
+    #pop out the last two numbers in order
+    v2, v1 = stack.pop(), stack.pop()
+
+    #perform the operation and append the new value to stack
+    if operator == "+":
+        exp = v1 + v2
+        stack.append(exp)
+
+    elif operator == "-":
+        exp = v1 - v2
+        stack.append(exp)
+
+    elif operator == "/":
+        exp = v1 / v2
+        stack.append(exp)
+
+    elif operator == "*":
+        exp = v1 * v2
+        stack.append(exp) 
+
+#time complexity: O(n)
+#space complexity (due to stack): O(n)
+def postFixCalculator(exp):
+
+    #catch invalid input
+    if not isinstance(exp, list) or len(exp) == 2:
+        return "Invalid input"
+
+    #necessary stack
+    stack = []
+
+    #for each value in the expression
+    for val in exp:
+
+        #if there is only 0 or 1 value in the stack
+        if len(stack) < 2:
+            
+            #if the current value to be considered is an operator
+            if val in ["+", "-", "*", "/"]:
+                #then return that the expression is invalid
+                #because there are not enough numbers to perform
+                #an operation
+                return "Invalid post fix expression"
+                
+            #else
+            else:
+                #add the float version of the value
+                stack.append(float(val))
+        
+        #else if the stack has 2 or more values and 
+        #the current value to be considered is not an operator
+        elif val not in ["+", "-", "*", "/"]:
+            #then return that the expression is invalid
+            #because there will be too many numbers and 
+            #not enough operations
+            return "Invalid post fix expression"
+        
+        #otherwise, use the helper method to calculate the expression
+        else:
+            #has time and space complexity O(1) so doesn't affect
+            #big O of postFixCalculator function
+            calcHelper(stack, val)
+    
+    #return the remaining element in the array
+    return stack.pop()
+
+#given case
+inp2 = ["2", "1", "+", "4", "*"]
+print("output for given problem: ", postFixCalculator(inp2))
+
+#test 1: only one operation
+test1 = ["3", "8", "+"]
+print("test 1: ", postFixCalculator(test1))
+
+#test 2: only one number (technically valid: it'll just return the number)
+test2 = ["3"]
+print("test 2: ", postFixCalculator(test2))
+
+#test 3, 4, & 5: invalid input
+test3 = ["2", "3"]
+print("test 3: ", postFixCalculator(test3))
+
+test4 = ["2", "1", "5", "+"]
+print("test 4: ", postFixCalculator(test4))
+
+test5 = ["2", "-", "3"]
+print("test 5: ", postFixCalculator(test5))
